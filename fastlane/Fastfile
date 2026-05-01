@@ -1,0 +1,87 @@
+default_platform(:mac)
+
+RELEASES_DIR = File.expand_path("../Releases", __dir__)
+RELEASE_VERSION_BUMP_OPTIONS = {
+  major_version: :major,
+  minor_version: :minor,
+  patch: :patch
+}.freeze
+
+def release_option_enabled?(value)
+  value == true || %w[true 1 yes y].include?(value.to_s.downcase)
+end
+
+def release_version_bump_type(options)
+  selected_bumps = RELEASE_VERSION_BUMP_OPTIONS.select do |option, _|
+    release_option_enabled?(options[option])
+  end
+
+  UI.user_error!("Pass only one version bump option: major_version, minor_version, or patch") if selected_bumps.size > 1
+
+  selected_bumps.values.first
+end
+
+def next_release_version(version, bump_type)
+  parts = version.to_s.split(".")
+  UI.user_error!("Version #{version} must use numeric A, A.B, or A.B.C format") unless parts.size.between?(1, 3) && parts.all? { |part| part.match?(/\A\d+\z/) }
+
+  major, minor, patch = (parts.map(&:to_i) + [0, 0, 0]).take(3)
+
+  case bump_type
+  when :major
+    [major + 1, 0, 0].join(".")
+  when :minor
+    [major, minor + 1, 0].join(".")
+  when :patch
+    [major, minor, patch + 1].join(".")
+  end
+end
+
+platform :mac do
+  private_lane :build do |options|
+    gym(output_directory: options[:output_dir])
+  end
+
+  private_lane :create_dmg do |options|
+    api_key = app_store_connect_api_key(
+      key_id: ENV.fetch("APP_STORE_CONNECT_API_KEY_ID"),
+      issuer_id: ENV.fetch("APP_STORE_CONNECT_API_ISSUER_ID"),
+      key_content: ENV.fetch("APP_STORE_CONNECT_API_KEY_CONTENT"),
+      is_key_content_base64: true
+    )
+
+    sh(
+      "create-dmg",
+      File.join(options[:output_dir], "XPreview.app"),
+      options[:output_dir],
+      "--overwrite",
+      "--no-version-in-filename",
+      "--identity=#{ENV.fetch("CODESIGNING_IDENTITY")}"
+    )
+
+    notarize(
+      package: File.join(options[:output_dir], "XPreview.dmg"),
+      bundle_id: ENV.fetch("APP_IDENTIFIER"),
+      api_key: api_key,
+      use_notarytool: true,
+      print_log: true
+    )
+
+  end
+
+  desc "Build release; optionally bump with major_version:true, minor_version:true, or patch:true"
+  lane :release do |options|
+    bump_type = release_version_bump_type(options)
+    version = get_version_number(target: "XPreview")
+
+    if bump_type
+      version = next_release_version(version, bump_type)
+      increment_version_number(version_number: version, xcodeproj: "XPreview.xcodeproj")
+    end
+
+    output_dir = File.join(RELEASES_DIR, version)
+    build(output_dir: output_dir)
+    create_dmg(output_dir: output_dir)
+  end
+
+end

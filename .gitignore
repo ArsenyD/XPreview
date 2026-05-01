@@ -24,5 +24,12 @@ build/
 *.dat
 *.dep
 
-# Local planning/walkthrough notes
+# Local folders
 local-notes/
+Releases/
+
+# Fastlane report
+fastlane/report.xml
+
+#Environment values
+.env

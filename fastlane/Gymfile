@@ -1,0 +1,5 @@
+scheme("XPreview")
+
+codesigning_identity(ENV.fetch("CODESIGNING_IDENTITY"))
+
+export_method("developer-id")
