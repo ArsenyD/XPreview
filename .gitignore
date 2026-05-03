@@ -28,8 +28,9 @@ build/
 local-notes/
 Releases/
 
-# Fastlane report
+# Fastlane artifacts
 fastlane/report.xml
+fastlane/README.md
 
 #Environment values
 .env

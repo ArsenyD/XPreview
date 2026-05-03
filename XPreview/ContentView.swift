@@ -66,7 +66,7 @@ struct ContentView: View {
 
     private var supportedFiles: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label(String(localized: .supportedFiles), systemImage: "checkmark.circle")
+            Label(.supportedFiles, systemImage: "checkmark.circle")
                 .font(.headline)
 
             HStack(spacing: 8) {
