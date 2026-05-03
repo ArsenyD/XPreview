@@ -1,60 +1,60 @@
 name: Release
-
 on:
-      workflow_dispatch:
+  workflow_dispatch:
 jobs:
-      release:
-          runs-on: macos-latest
+  release:
+    runs-on: macos-latest
 
-          env:
-           APPLE_ID: ${{ vars.APPLE_ID }}
-           APP_IDENTIFIER: ${{vars.APP_IDENTIFIER}}
-           CODESIGNING_IDENTITY: ${{vars.CODESIGNING_IDENTITY}}
-           TEAM_ID: ${{vars.TEAM_ID}}
+    env:
+      APPLE_ID: ${{ vars.APPLE_ID }}
+      APP_IDENTIFIER: ${{vars.APP_IDENTIFIER}}
+      CODESIGNING_IDENTITY: ${{vars.CODESIGNING_IDENTITY}}
+      TEAM_ID: ${{vars.TEAM_ID}}
 
-           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
-           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+      APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+      APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
 
-          steps:
-           - uses: actions/checkout@v6
+    steps:
+      - uses: actions/checkout@v6
 
-           - uses: ruby/setup-ruby@v1
-             with:
-               bundler-cache: true
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 4.0.3
+          bundler-cache: true
 
-           - uses: actions/setup-node@v6
-             with:
-               node-version: '24'
-               package-manager-cache: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          package-manager-cache: false
 
-           - name: Install create-dmg
-             run: npm install --global create-dmg
+      - name: Install create-dmg
+        run: npm install --global create-dmg
 
-           - name: Import Developer ID certificate
-             env:
-               SIGN_CERT_BASE64: ${{ secrets.SIGN_CERT_BASE64 }}
-               SIGN_CERT_PASSWORD: ${{ secrets.SIGN_CERT_PASSWORD }}
-               KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-             run: |
-               CERT_PATH="$RUNNER_TEMP/developer_id.p12"
-               KEYCHAIN_PATH="$RUNNER_TEMP/app-signing.keychain-db"
+      - name: Import Developer ID certificate
+        env:
+          SIGN_CERT_BASE64: ${{ secrets.SIGN_CERT_BASE64 }}
+          SIGN_CERT_PASSWORD: ${{ secrets.SIGN_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          CERT_PATH="$RUNNER_TEMP/developer_id.p12"
+          KEYCHAIN_PATH="$RUNNER_TEMP/app-signing.keychain-db"
 
-               echo "$SIGN_CERT_BASE64" | base64 --decode > "$CERT_PATH"
+          echo "$SIGN_CERT_BASE64" | base64 --decode > "$CERT_PATH"
 
-               security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-               security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
-               security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-               security import "$CERT_PATH" -P "$SIGN_CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
-               security list-keychain -d user -s "$KEYCHAIN_PATH"
-               security default-keychain -s "$KEYCHAIN_PATH"
-               security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERT_PATH" -P "$SIGN_CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
+          security default-keychain -s "$KEYCHAIN_PATH"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
 
-           - name: Run fastlane release
-             run: bundle exec fastlane release
+      - name: Run fastlane release
+        run: bundle exec fastlane release
 
-           - name: Upload DMG
-             uses: actions/upload-artifact@v4
-             with:
-               name: XPreview-dmg
-               path: Releases/*/XPreview.dmg
+      - name: Upload DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: XPreview-dmg
+          path: Releases/*/XPreview.dmg
