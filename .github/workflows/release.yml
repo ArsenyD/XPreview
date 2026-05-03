@@ -2,8 +2,8 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      release_type:
-        description: "Log level"
+      releaseType:
+        description: "Release Type"
         required: true
         type: choice
         options:
@@ -60,7 +60,7 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
 
       - name: Run fastlane release
-        run: bundle exec fastlane release version_bump:${{ inputs.version_bump }}
+        run: bundle exec fastlane release version_bump:${{ inputs.releaseType }}
 
       - name: Upload DMG
         uses: actions/upload-artifact@v4
