@@ -12,7 +12,7 @@ on:
           - patch
 jobs:
   release:
-    runs-on: macos-latest
+    runs-on: macos-26
 
     env:
       APPLE_ID: ${{ vars.APPLE_ID }}
@@ -26,6 +26,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.4.app/Contents/Developer
+          xcodebuild -version
 
       - uses: ruby/setup-ruby@v1
         with:
