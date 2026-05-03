@@ -1,24 +1,18 @@
 default_platform(:mac)
 
 RELEASES_DIR = File.expand_path("../Releases", __dir__)
-RELEASE_VERSION_BUMP_OPTIONS = {
-  major_version: :major,
-  minor_version: :minor,
-  patch: :patch
-}.freeze
-
-def release_option_enabled?(value)
-  value == true || %w[true 1 yes y].include?(value.to_s.downcase)
-end
+RELEASE_VERSION_BUMP_TYPES = %w[major minor patch].freeze
 
 def release_version_bump_type(options)
-  selected_bumps = RELEASE_VERSION_BUMP_OPTIONS.select do |option, _|
-    release_option_enabled?(options[option])
+  bump_type = options[:version_bump]&.to_s
+
+  return nil if bump_type.nil? || bump_type.empty?
+
+  unless RELEASE_VERSION_BUMP_TYPES.include?(bump_type)
+    UI.user_error!("version_bump must be one of: #{RELEASE_VERSION_BUMP_TYPES.join(", ")}")
   end
 
-  UI.user_error!("Pass only one version bump option: major_version, minor_version, or patch") if selected_bumps.size > 1
-
-  selected_bumps.values.first
+  bump_type.to_sym
 end
 
 def next_release_version(version, bump_type)
@@ -69,7 +63,7 @@ platform :mac do
 
   end
 
-  desc "Build release; optionally bump with major_version:true, minor_version:true, or patch:true"
+  desc "Build release; optionally bump with version_bump:major, version_bump:minor, or version_bump:patch"
   lane :release do |options|
     bump_type = release_version_bump_type(options)
     version = get_version_number(target: "XPreview")
