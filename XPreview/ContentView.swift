@@ -1,29 +1,28 @@
 import SwiftUI
 
 struct ContentView: View {
-    private let supportedTypes = [".playground", ".plist", ".entitlements", "more to come!"]
+    private let supportedTypes = [".playground", ".plist", ".entitlements", String(localized: .moreToCome)]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             header
 
             instructionSection(
-                title: "Enable The Extension",
+                title: String(localized: .enableTheExtension),
                 systemImage: "switch.2",
                 rows: [
-                    "Open System Settings.",
-                    "Go to General > Login Items & Extensions.",
-                    "Turn on XPreview Quick Look Extension.",
+                    String(localized: .openSystemSettings),
+                    String(localized: .goToGeneralLoginItemsExtensions),
+                    String(localized: .turnOnXpreviewQuickLookExtension),
                 ]
             )
 
             instructionSection(
-                title: "Use It In Finder",
+                title: String(localized: .useItInFinder),
                 systemImage: "doc.viewfinder",
                 rows: [
-                    "Select a supported file in Finder.",
-                    "Press Space to open Quick Look.",
-                    "Use Open with Xcode when you need to edit the file."
+                    String(localized: .selectASupportedFileInFinder),
+                    String(localized: .pressSpaceToOpenQuickLook)
                 ]
             )
 
@@ -39,7 +38,7 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .fontWeight(.semibold)
 
-            Text("Quick Look previews for Swift Developers.")
+            Text(String(localized: .quickLookPreviewsForSwiftDevelopers))
                 .foregroundStyle(.secondary)
         }
     }
@@ -67,7 +66,7 @@ struct ContentView: View {
 
     private var supportedFiles: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Supported Files", systemImage: "checkmark.circle")
+            Label(String(localized: .supportedFiles), systemImage: "checkmark.circle")
                 .font(.headline)
 
             HStack(spacing: 8) {

@@ -5,8 +5,9 @@ struct XPreviewApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(width: 500, height: 500)
+                .frame(width: 550, height: 550)
         }
         .windowResizability(.contentSize)
     }
 }
+

@@ -1,0 +1,116 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "\"Enable The Extension\"" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Установка"
+          }
+        }
+      }
+    },
+    "\"Go to General > Login Items & Extensions.\"" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Общие > Объекты входа и расширения"
+          }
+        }
+      }
+    },
+    "\"Open System Settings.\"" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откройте Системные Настройки."
+          }
+        }
+      }
+    },
+    "\"Press Space to open Quick Look.\"" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нажмите Пробел"
+          }
+        }
+      }
+    },
+    "\"Quick Look previews for Swift Developers.\"" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Расширение быстрого просмотра"
+          }
+        }
+      }
+    },
+    "\"Select a supported file in Finder.\"" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите поддерживаемый файл."
+          }
+        }
+      }
+    },
+    "\"Supported Files\"" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поддерживаемые файлы"
+          }
+        }
+      }
+    },
+    "\"Turn on XPreview Quick Look Extension.\"" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Убедитесь, что расширение быстрого просмотра включено для XPreview."
+          }
+        }
+      }
+    },
+    "\"Use It In Finder\"" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Использование"
+          }
+        }
+      }
+    },
+    "more to come!" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Больше файлов в будущем!"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}
